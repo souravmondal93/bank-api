@@ -11,16 +11,18 @@ import { LoginUserInput } from './dto/login-user.input';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService, 
-    private jwtService: JwtService
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findOneByEmail(email);
-    if (user) {
-      if (await bcrypt.compare(password, user.password)) {
-        const { password, ...result } = user;
-        return result;
+    const user = await this.usersService.findOneByEmail(email) as any;
+
+    if (user || user?.errors?.length) {
+      const isValidUser = await bcrypt.compare(password, user.password);
+      if (isValidUser) {
+        delete user.password;
+        return user;
       }
     }
 
@@ -39,8 +41,9 @@ export class AuthService {
       loginUserInput.email,
       loginUserInput.password,
     );
+
     if (!user) {
-      throw new BadRequestException(`Email or password are invalid`);
+      return { errors: [{ message: 'Email or password are invalid' }] };
     } else {
       return this.generateUserCredentials(user);
     }
@@ -48,13 +51,14 @@ export class AuthService {
 
   async generateUserCredentials(user: User) {
     const payload = {
+      _id: user._id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: await this.jwtService.sign(payload),
     };
   }
 }

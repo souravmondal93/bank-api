@@ -1,11 +1,12 @@
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { GqlAuthGuard } from '../auth/gql-auth-guard';
+import { NewUserUpdateInput } from './dto/new-user-update.input';
+import { GqlAuthGuard, UserDetailsFromJwt } from '../auth/gql-auth-guard';
 import { CurrentUser } from '../decorators/current-user';
 
 @Resolver(() => User)
@@ -41,5 +42,11 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard)
   whoAmI(@CurrentUser() user: User) {
     return this.usersService.findOneByEmail(user.email);
+  }
+
+  @Mutation(() => User)
+  @UseGuards(GqlAuthGuard)
+  updateNewUser(@CurrentUser() user: UserDetailsFromJwt, @Args('newUser') newUser: NewUserUpdateInput) {
+    return this.usersService.updateNewUser(user._id, newUser);
   }
 }

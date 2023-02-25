@@ -59,8 +59,12 @@ export class User {
   @Field(() => String, { description: 'User phone ' })
   phone: string;
 
-  @Prop({ required: true, select: false })
+  @Prop({ required: true })
   password: string;
+
+  @Prop({ default: true })
+  @Field(() => Boolean, { description: 'Is New User ' })
+  newUser: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

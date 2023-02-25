@@ -1,48 +1,40 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { LoginUserInput } from './dto/login-user.input';
-import { PASSWORD_SALT } from './user.constants';
+import { NewUserUpdateInput } from './dto/new-user-update.input';
 import { User } from './entities/user.entity';
-import { AuthService } from '../auth/auth.service';
-
-// export type User = any;
+import { AccountsService } from '../accounts/accounts.service';
+import { AccountType } from '../common/enums/account-type.enum';
+import { GraphQLErrorsType } from '../common/types/errors.interface';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
+    private readonly accountsService: AccountsService,
+    private readonly configService: ConfigService,
   ) {}
-
-  private readonly users = [
-    {
-      userId: '1',
-      username: 'john',
-      email: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: '2',
-      username: 'maria',
-      email: 'maria',
-      password: 'guess',
-    },
-  ];
 
   async create(createUserInput: CreateUserInput) {
     const password = createUserInput.password;
-    createUserInput.password = await bcrypt.hash(password, PASSWORD_SALT);
+    const salt = this.configService.get('BYCRYPT.BYCRYPT_SALT_ROUNDS');
+
+    createUserInput.password = await bcrypt.hash(password, salt);
     const user = new this.userModel(createUserInput);
-    return user.save();
+    const savedUser = await user.save();
+
+    await this.accountsService.create({
+      owner: savedUser._id.toString(),
+      type: AccountType.Savings,
+    });
+
+    return savedUser;
   }
 
   findAll() {
@@ -60,7 +52,7 @@ export class UsersService {
   async findOneByEmail(email: string): Promise<User | undefined> {
     const user = await this.userModel.findOne({ email: email }).exec();
     if (!user) {
-      throw new NotFoundException(`User ${email} not found`);
+      return { errors: [ { message: `User ${email} not found` } ] } as any;
     }
     return user;
   }
@@ -71,13 +63,25 @@ export class UsersService {
       .exec();
 
     if (!existingUser) {
-      throw new NotFoundException(`User ${id} not found`);
+      return { errors: [ { message: `User not found` } ] } as any;
     }
 
     return existingUser;
   }
 
-  async remove(id: string) {
+  async updateNewUser(id: string, newUser: NewUserUpdateInput) {
+    const existingUser = await this.userModel
+      .findOneAndUpdate({ _id: id }, { $set: newUser }, { new: true })
+      .exec();
+
+    if (!existingUser) {
+      return { errors: [ { message: `User not found` } ] } as any;
+    }
+
+    return existingUser;
+  }
+
+  async remove(id: ObjectId | string) {
     const user = await this.userModel.findOne({ _id: id });
     return user.remove();
   }

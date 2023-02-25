@@ -1,7 +1,22 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import {
+  IsNotEmpty,
+  IsEnum,
+  IsMongoId,
+} from 'class-validator';
+import { Schema as MongooseSchema } from 'mongoose';
+
+import { AccountType } from '../../common/enums/account-type.enum';
 
 @InputType()
 export class CreateAccountInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  @IsEnum(AccountType)
+  @IsNotEmpty()
+  type: string;
+
+  @Field()
+  @IsMongoId()
+  @IsNotEmpty()
+  owner: string;
 }

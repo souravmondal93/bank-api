@@ -6,7 +6,8 @@ export default () => ({
     MONGODB_CONNECTION_STRING: process.env.MONGODB_CONNECTION_STRING,
   },
   BYCRYPT: {
-    BYCRYPT_SALT_ROUNDS: process.env.BYCRYPT_SALT_ROUNDS,
+    BYCRYPT_SALT_ROUNDS: parseInt(process.env.BYCRYPT_SALT_ROUNDS),
   },
   JWT_SECRET: process.env.JWT_SECRET,
+  SORT_CODE: parseInt(process.env.SORT_CODE)
 });

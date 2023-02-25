@@ -78,7 +78,20 @@ Nest is [MIT licensed](LICENSE).
 1. Enable auth using graphql - DONE
 2. Start with user creation - DONE
 3. Connect with mongoDB - DONE
-4. Transactions API  -> Transaction API pagination
-5. Dashboard data
-6. JWT validation and return data based on JWT
-7. 
+4. Transactions API - DONE
+5. Dashboard data - DONE
+6. JWT validation and return data based on JWT - DONE
+7. Account Creation - DONE
+8. Transaction API pagination
+9. Login Form validations - DONE
+10. Registration Form validations - DONE
+11. Error Pages: 404, 5xx - reuse login page - DONE
+12. Integrate Modal - Welcome message for new user - DONE
+13. Integrate Modal - New card apply - DONE
+14. Login Form error messages - DONE
+15. Logout Functionality - DONE
+16. Auto-redirect from / -> /auth/login - DONE
+17. Integrate Transactions page -
+
+
+NOTE: Don't put efforts for cookie based authentication for now

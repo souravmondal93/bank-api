@@ -28,6 +28,34 @@ type User {
 
   """User phone """
   phone: String!
+
+  """Is New User """
+  newUser: Boolean!
+}
+
+type Account {
+  _id: String!
+
+  """Type"""
+  type: String!
+
+  """Is account active?"""
+  isActive: Boolean!
+
+  """Owner"""
+  owner: String!
+
+  """Sort Code"""
+  sortCode: Float!
+
+  """Account Number"""
+  accountNumber: Float!
+
+  """Currency"""
+  currency: String!
+
+  """Balance"""
+  balance: Float!
 }
 
 type LoggedUserOutput {
@@ -36,22 +64,92 @@ type LoggedUserOutput {
 }
 
 type Transaction {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  _id: String!
+
+  """Type"""
+  type: String!
+
+  """Payee Name"""
+  payeeName: String!
+
+  """Date"""
+  date: Date!
+
+  """Amount"""
+  amount: Float!
+
+  """Status"""
+  status: String!
+
+  """Reference"""
+  reference: String!
+
+  """Source Account Id"""
+  sourceAccountId: String!
+
+  """Sender"""
+  senderId: String!
+
+  """Recipient"""
+  recipientId: String!
+
+  """Recepient Account Id"""
+  recipientAccountId: String!
 }
+
+type SpendingByWeekType {
+  week: [String!]
+  spending: [Float!]
+}
+
+type Insight {
+  _id: String!
+  startingBalance: Float!
+  startingBalanceChange: String!
+  totalMoneyIn: Float!
+  totalMoneyInChange: String!
+  totalMoneyOut: Float!
+  totalMoneyOutChange: String!
+  leftToSpend: Float!
+  leftToSpendChange: String!
+  shoppingExpenditure: Float!
+  groceriesExpenditure: Float!
+  billsExpenditure: Float!
+  miscExpenditure: Float!
+  spendingByWeek: SpendingByWeekType!
+  lastWeekChange: String!
+  savingsAccountByMonth: [Float!]!
+  creditCardByMonth: [Float!]!
+  months: [String!]!
+  lastYearChange: String!
+}
+
+"""Date custom scalar type"""
+scalar Date
 
 type Query {
   users: [User!]!
   user(id: String!): User!
   whoAmI: User!
+  accounts: [Account!]!
+  account(id: Int!): Account!
+  getMyAccount: Account!
+  getMyCreditCardAccount: Account!
   transactions: [Transaction!]!
+  transactionsByCurrentUser: [Transaction!]!
+  CreditCarTransactionsByCurrentUser: [Transaction!]!
   transaction(id: Int!): Transaction!
+  insights: Insight!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
+  updateNewUser(newUser: NewUserUpdateInput!): User!
+  createAccount(createAccountInput: CreateAccountInput!): Account!
+  updateAccount(updateAccountInput: UpdateAccountInput!): Account!
+  removeAccount(id: Int!): Account!
   loginUser(loginUserInput: LoginUserInput!): LoggedUserOutput!
   createTransaction(createTransactionInput: CreateTransactionInput!): Transaction!
   updateTransaction(updateTransactionInput: UpdateTransactionInput!): Transaction!
@@ -83,6 +181,22 @@ input UpdateUserInput {
   id: Int!
 }
 
+input NewUserUpdateInput {
+  """Is New User?"""
+  newUser: Boolean!
+}
+
+input CreateAccountInput {
+  type: String!
+  owner: String!
+}
+
+input UpdateAccountInput {
+  type: String
+  owner: String
+  id: Int!
+}
+
 input LoginUserInput {
   """email of the user"""
   email: String!
@@ -92,12 +206,28 @@ input LoginUserInput {
 }
 
 input CreateTransactionInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  type: String!
+  payeeName: String!
+  date: String!
+  amount: Float!
+  status: String!
+  reference: String!
+  sourceAccountId: String!
+  senderId: String!
+  recipientId: String!
+  recipientAccountId: String!
 }
 
 input UpdateTransactionInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  type: String
+  payeeName: String
+  date: String
+  amount: Float
+  status: String
+  reference: String
+  sourceAccountId: String
+  senderId: String
+  recipientId: String
+  recipientAccountId: String
   id: Int!
 }

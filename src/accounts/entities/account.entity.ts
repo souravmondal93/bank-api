@@ -1,6 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Schema as MongooseSchema } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { Schema as MongooseSchema, Decimal128 } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+import { AccountType } from '../../common/enums/account-type.enum';
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -11,19 +14,19 @@ export class Account {
 
   @Prop({ required: true })
   @Field(() => String, { description: 'Type' })
-  type: string;
+  type: AccountType;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: true })
   @Field(() => Boolean, { description: 'Is account active?' })
   isActive: boolean;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId })
   @Field(() => String, { description: 'Owner' })
   owner: MongooseSchema.Types.ObjectId | string;;
 
   @Prop({ required: true })
   @Field(() => Number, { description: 'Sort Code' })
-  sortcode: number;
+  sortCode: number;
   
   @Prop({ required: true })
   @Field(() => Number, { description: 'Account Number' })
@@ -33,9 +36,9 @@ export class Account {
   @Field(() => String, { description: 'Currency' })
   currency: string
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ required: true, default: 0.00, type: Number })
   @Field(() => Number, { description: 'Balance' })
-  balance: number;
+  balance: Decimal128;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);
