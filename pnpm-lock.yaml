@@ -22,6 +22,7 @@ specifiers:
   '@types/supertest': ^2.0.11
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
+  apollo-server-core: ^3.11.1
   apollo-server-express: ^3.11.1
   bcrypt: ^5.1.0
   class-validator: ^0.14.0
@@ -46,7 +47,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  '@nestjs/apollo': 10.2.0_bffxszz6pucpfjguhkrsubpl64
+  '@nestjs/apollo': 10.2.0_f6bsjjwcit6r7qy7zpqosv3h64
   '@nestjs/common': 9.3.8_ca43gjgfb2qovizjnmxfs634zy
   '@nestjs/config': 2.3.1_6sysrfnceog466mrogtvxnbmxe
   '@nestjs/core': 9.3.8_7ssxb7bx3nq7vbdensazueyaee
@@ -55,6 +56,7 @@ dependencies:
   '@nestjs/mongoose': 9.2.1_mocgdazr3eq6zszlsqe2a4j6eq
   '@nestjs/passport': 9.0.3_h5em43qqpxejdeuyldpwjpxdbe
   '@nestjs/platform-express': 9.3.8_znlpu2ktzydjx7rl4llynpumdm
+  apollo-server-core: 3.11.1_graphql@16.6.0
   apollo-server-express: 3.11.1_5ha345eiak62qiwwva5z4dp6gu
   bcrypt: 5.1.0
   class-validator: 0.14.0
@@ -1926,7 +1928,7 @@ packages:
       - supports-color
     dev: false
 
-  /@nestjs/apollo/10.2.0_bffxszz6pucpfjguhkrsubpl64:
+  /@nestjs/apollo/10.2.0_f6bsjjwcit6r7qy7zpqosv3h64:
     resolution: {integrity: sha512-ZIPu6t4JIhkRMa1Fpo2Et4p8eOQ3ci/hi0wNkvLCqykCYOyUvgNF5mPnim3LHLszK8WUvnaga/Rw73sDTwFJmw==}
     peerDependencies:
       '@apollo/gateway': ^0.44.1 || ^0.46.0 || ^0.48.0 || ^0.49.0 || ^0.50.0 || ^2.0.0
@@ -1953,6 +1955,7 @@ packages:
       '@nestjs/common': 9.3.8_ca43gjgfb2qovizjnmxfs634zy
       '@nestjs/core': 9.3.8_7ssxb7bx3nq7vbdensazueyaee
       '@nestjs/graphql': 10.2.0_52dcytoaso6xl43gh3oieexs6m
+      apollo-server-core: 3.11.1_graphql@16.6.0
       apollo-server-express: 3.11.1_5ha345eiak62qiwwva5z4dp6gu
       graphql: 16.6.0
       iterall: 1.3.0
